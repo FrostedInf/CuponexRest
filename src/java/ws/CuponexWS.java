@@ -5,6 +5,7 @@
  */
 package ws;
 
+import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -13,12 +14,16 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import mybatis.MyBatisUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONException;
 import org.json.JSONObject;
+import pojos.Empresa;
+import pojos.Promocion;
+import pojos.Sucursal;
 import pojos.Usuario;
 
 /**
@@ -85,13 +90,71 @@ public class CuponexWS {
     }
 
     //modulo de promocion
-
+    @Path("/sucursal/getAllSucursal/{id}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Promocion> getAllPromociones(@PathParam("id") Integer idSucursal) {
+        List<Promocion> list = null;
+        SqlSession conn = MyBatisUtil.getSession();
+        if(conn != null){
+            try {
+                
+                list = conn.selectList("Promocion.getAllEmpresas", idSucursal);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally{
+                conn.close();
+            }
+        }
+        
+        return list;
+       
+    }
 
 
     //modulo de Empresa
-    
+    @Path("/empresa/getAllEmpresa")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Empresa> getAllEmpresa() {
+        List<Empresa> list = null;
+        SqlSession conn = MyBatisUtil.getSession();
+        if(conn != null){
+            try {
+                list = conn.selectList("Empresa.getAllEmpresas");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally{
+                conn.close();
+            }
+        }
+        
+        return list;
+       
+    }
     
     
     //modulo de sucursal
+    
+    @Path("/sucursal/getAllSucursal/{id}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Sucursal> getAllSucursal(@PathParam("id") Integer idEmpresa) {
+        List<Sucursal> list = null;
+        SqlSession conn = MyBatisUtil.getSession();
+        if(conn != null){
+            try {
+                
+                list = conn.selectList("Sucursal.getAllEmpresas", idEmpresa);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally{
+                conn.close();
+            }
+        }
+        
+        return list;
+       
+    }
     
 }
